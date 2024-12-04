@@ -3,16 +3,10 @@ import pandas as pd
 from collections import defaultdict
 import random
 
-corpus_string = ""
-corpus = []
-dct = {}
-i = 0
-
 data = pd.read_csv('recipes.csv')
-recipe_list = data['recipe_name'].head(100).tolist()
-ingredient_list = data['ingredients'].head(100).tolist()
-ingredient_list = [line.split() for line in ingredient_list]
-
+recipe_list = data['recipe_name'].head(1000).tolist()
+ingredient_list = data['ingredients'].head(1000).tolist()
+ingredient_list = [line.split(",") for line in ingredient_list]
 
 markov_chain = defaultdict(lambda: defaultdict(int))
 
@@ -28,7 +22,7 @@ for current_word, transitions in markov_chain.items():
         transitions[next_word] /= total_transitions
 
 
-def generate_ingredient_list(chain, start_word, length=15):
+def generate_ingredient_list(chain, start_word, length):
     word = start_word
     result = [word]
     for _ in range(length - 1):
@@ -43,8 +37,12 @@ def generate_ingredient_list(chain, start_word, length=15):
     return ' '.join(result)
 
 print("INGREDIENT LIST: ")
-for i in range(6):
-    start_word = "1"
-    generated_list = generate_ingredient_list(markov_chain, start_word=start_word)
-    print(generated_list)
+start_word = "2 tablespoons olive oil"
+generated_list = generate_ingredient_list(markov_chain, start_word=start_word, length=10)
 
+ingredient_pattern = r'(\d+\s?\d*\/?\d*\s*(?:tablespoon|tbsp|teaspoon|tsp|cup|pounds|ounce|gram|g|liter|l)?\s*[a-zA-Z\-]+(?:\s?[a-zA-Z\-]+)*)'
+ingredients_list = re.findall(ingredient_pattern, generated_list)
+
+# Print each ingredient on a new line
+for ingredient in ingredients_list:
+    print(ingredient.strip())
