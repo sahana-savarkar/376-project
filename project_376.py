@@ -36,13 +36,21 @@ def generate_ingredient_list(chain, start_word, length):
         word = next_word
     return ' '.join(result)
 
-print("INGREDIENT LIST: ")
-start_word = "2 tablespoons olive oil"
-generated_list = generate_ingredient_list(markov_chain, start_word=start_word, length=10)
+# print("INGREDIENT LIST: ")
+print('RECIPE LIST: ')
+start_word = "Apple Pie"
+generated_list = generate_ingredient_list(markov_chain, start_word=start_word, length=8)
 
-ingredient_pattern = r'(\d+\s?\d*\/?\d*\s*(?:tablespoon|tbsp|teaspoon|tsp|cup|pounds|ounce|gram|g|liter|l)?\s*[a-zA-Z\-]+(?:\s?[a-zA-Z\-]+)*)'
-ingredients_list = re.findall(ingredient_pattern, generated_list)
+
+#ingredient_pattern = r'(\d+\s?\d*\/?\d*\s*(?:tablespoon|tbsp|teaspoon|tsp|cup|pounds|ounce|gram|g|liter|l)?\s*[a-zA-Z\-]+(?:\s?[a-zA-Z\-]+)*)'
+#ingredients_list = re.findall(ingredient_pattern, generated_list)
+recipe_pattern = r'(\d+\s?\d*\/?\d*\s*(?:apple|warm|caramel|turnover|crisp|pie|crumb|cake)(?:\s?(?:apple|warm|caramel|turnover|crisp|pie|crumb|cake))*)'
+recipes_list = re.findall(recipe_pattern, generated_list)
+
 
 # Print each ingredient on a new line
-for ingredient in ingredients_list:
-    print(ingredient.strip())
+#for ingredient in ingredients_list:
+ #   print(ingredient.strip())
+
+for recipe in recipes_list:
+    print(recipe.strip())
