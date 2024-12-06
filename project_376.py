@@ -3,7 +3,7 @@ import pandas as pd
 from collections import defaultdict
 import random
 
-data = pd.read_csv('dessert_recipes.csv')
+data = pd.read_csv('non_dessert_recipes.csv')
 
 recipe_name_list = data['recipe_name'].head(1000).tolist()
 recipe_name_list = [line.split() for line in recipe_name_list]
@@ -50,9 +50,9 @@ markov_recipe_name = markov_chain_generator(recipe_name_list)
 markov_ingredient_list = markov_chain_generator(ingredient_list)
 markov_directions = markov_chain_generator(directions_list)
 
-recipe_start_word = "Apple"
-ingredient_start_word = "8 small Granny Smith apples"
-ingredient2_start_word =  "1 cup sliced fresh peaches"
+recipe_start_word = "Applesauce"
+ingredient_start_word = " ¼ cup white sugar"
+ingredient2_start_word =  " 2 stalks celery"
 directions_start_word = "Peel"
 
 
