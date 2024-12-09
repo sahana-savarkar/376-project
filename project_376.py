@@ -69,18 +69,23 @@ ingredients_result2 = re.findall(ingredient_pattern, ingredients_result2)
 
 directions_result = generate_ingredient_list(markov_directions, start_word=directions_start_word, length=2000)
 
+def add_bullet_points(paragraph, bullet='•'):
+    sentences = re.split(r'(?<=[.!?])\s+', paragraph.strip())
+    bullet_points = [f"{bullet} {sentence.strip()}" for sentence in sentences if sentence]
+    return '\n'.join(bullet_points)
 
+directions_bulleted = add_bullet_points(directions_result)
 
 print('\nRECIPE NAME: ')
 print(recipe_name_result)
 
 
-print("INGREDIENT LIST: \n")
+print("\nINGREDIENT LIST: \n")
 for ingredient in ingredients_result:
-    print(ingredient.strip())
+    print("-", ingredient.strip())
 for ingredient in ingredients_result2:
-    print(ingredient.strip())
+    print("-", ingredient.strip())
 
 
-print("DIRECTIONS: \n")
-print(directions_result)
+print("\nDIRECTIONS: \n")
+print(directions_bulleted)
