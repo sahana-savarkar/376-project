@@ -4,7 +4,6 @@ from collections import defaultdict
 import random
 
 data = pd.read_csv('pie_recipes.csv')
-data = data.dropna(subset=['recipe_name', 'ingredients', 'directions'])
 
 recipe_name_list = data['recipe_name'].head(1000).tolist()
 recipe_name_list = [line.split() for line in recipe_name_list]
@@ -51,10 +50,11 @@ markov_recipe_name = markov_chain_generator(recipe_name_list)
 markov_ingredient_list = markov_chain_generator(ingredient_list)
 markov_directions = markov_chain_generator(directions_list)
 
-recipe_start_word = "Apple"
-ingredient_start_word = "½ cup unsalted butter"
-ingredient2_start_word =  "6 cups thinly sliced apples"
+recipe_start_word = "Applesauce"
+ingredient_start_word = " ¼ cup white sugar"
+ingredient2_start_word =  " 2 stalks celery"
 directions_start_word = "Peel"
+
 
 
 
@@ -69,24 +69,18 @@ ingredients_result2 = re.findall(ingredient_pattern, ingredients_result2)
 
 directions_result = generate_ingredient_list(markov_directions, start_word=directions_start_word, length=2000)
 
-def add_bullet_points(paragraph, bullet='•'):
-    sentences = re.split(r'(?<=[.!?])\s+', paragraph.strip())
-    bullet_points = [f"{bullet} {sentence.strip()}" for sentence in sentences if sentence]
-    return '\n'.join(bullet_points)
-
-directions_bulleted = add_bullet_points(directions_result)
 
 
 print('\nRECIPE NAME: ')
 print(recipe_name_result)
 
 
-print("\nINGREDIENT LIST: \n")
+print("INGREDIENT LIST: \n")
 for ingredient in ingredients_result:
-    print("-", ingredient.strip())
+    print(ingredient.strip())
 for ingredient in ingredients_result2:
-    print("-", ingredient.strip())
+    print(ingredient.strip())
 
 
-print("\nDIRECTIONS: \n")
-print(directions_bulleted)
+print("DIRECTIONS: \n")
+print(directions_result)
