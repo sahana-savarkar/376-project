@@ -50,9 +50,9 @@ markov_recipe_name = markov_chain_generator(recipe_name_list)
 markov_ingredient_list = markov_chain_generator(ingredient_list)
 markov_directions = markov_chain_generator(directions_list)
 
-recipe_start_word = "Applesauce"
-ingredient_start_word = " ¼ cup white sugar"
-ingredient2_start_word =  " 2 stalks celery"
+recipe_start_word = "Apple"
+ingredient_start_word = "½ cup unsalted butter"
+ingredient2_start_word =  "6 cups thinly sliced apples"
 directions_start_word = "Peel"
 
 
