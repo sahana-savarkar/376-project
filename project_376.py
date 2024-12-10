@@ -9,8 +9,9 @@ data = data.dropna(subset=['recipe_name', 'ingredients', 'directions'])
 recipe_name_list = data['recipe_name'].head(1000).tolist()
 recipe_name_list = [line.split() for line in recipe_name_list]
 
-ingredient_list = data['ingredients'].head(1000).tolist()
-ingredient_list = [line.split(" ") for line in ingredient_list]
+ingredients_before = data['ingredients'].head(1000).tolist()
+ingredient_list = [line.split(" ") for line in ingredients_before]
+ingredient_starter = [line.split(",") for line in ingredients_before]
 
 directions_list = data['directions'].head(1000).tolist()
 directions_list = [line.split(" ") for line in directions_list]
@@ -46,6 +47,7 @@ def generate_ingredient_list(chain, start_word, length):
 
 markov_recipe_name = markov_chain_generator(recipe_name_list)
 markov_ingredient_list = markov_chain_generator(ingredient_list)
+markov_ingredient_starter = markov_chain_generator(ingredient_starter)
 markov_directions = markov_chain_generator(directions_list)
 
 recipe_start_word = random.choice(list(markov_recipe_name.keys()))
@@ -69,6 +71,9 @@ def truncate_invalid_ingredients(ingredients):
     return valid_ingredients
 
 for word in recipe_name_result.lower().split():
+    matching_key = next((key for key, ingredients in markov_ingredient_starter.items() if any(word in ingredient for ingredient in ingredients)), None)
+    print(matching_key)
+    ingredients_starter = generate_ingredient_list(markov_ingredient_list, start_word=word, length=10)
     ingredients = generate_ingredient_list(markov_ingredient_list, start_word=word, length=20)
     ingredients = re.findall(ingredient_pattern, ingredients)
     ingredients = truncate_invalid_ingredients(ingredients)
