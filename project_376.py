@@ -4,6 +4,7 @@ from collections import defaultdict
 import random
 
 data = pd.read_csv('pie_recipes.csv')
+data = data.dropna(subset=['recipe_name', 'ingredients', 'directions'])
 
 recipe_name_list = data['recipe_name'].head(1000).tolist()
 recipe_name_list = [line.split() for line in recipe_name_list]
@@ -53,8 +54,9 @@ markov_directions = markov_chain_generator(directions_list)
 recipe_start_word = "Apple"
 ingredient_start_word = "½ cup unsalted butter"
 ingredient2_start_word =  "6 cups thinly sliced apples"
-directions_start_word = "Peel"
-
+directions1_start_word = "Peel"
+directions2_start_word = "Mix"
+directions3_start_word = "Beat"
 
 
 
@@ -67,14 +69,20 @@ ingredients_result2 = generate_ingredient_list(markov_ingredient_list, start_wor
 ingredients_result = re.findall(ingredient_pattern, ingredients_result)
 ingredients_result2 = re.findall(ingredient_pattern, ingredients_result2)
 
-directions_result = generate_ingredient_list(markov_directions, start_word=directions_start_word, length=2000)
+directions_result1 = generate_ingredient_list(markov_directions, start_word=directions1_start_word, length=100)
+directions_result2 = generate_ingredient_list(markov_directions, start_word=directions2_start_word, length=100)
+directions_result3 = generate_ingredient_list(markov_directions, start_word=directions3_start_word, length=100)
+
 
 def add_bullet_points(paragraph, bullet='•'):
     sentences = re.split(r'(?<=[.!?])\s+', paragraph.strip())
     bullet_points = [f"{bullet} {sentence.strip()}" for sentence in sentences if sentence]
     return '\n'.join(bullet_points)
 
-directions_bulleted = add_bullet_points(directions_result)
+directions_bulleted1 = add_bullet_points(directions_result1)
+directions_bulleted2 = add_bullet_points(directions_result2)
+directions_bulleted3 = add_bullet_points(directions_result3)
+
 
 print('\nRECIPE NAME: ')
 print(recipe_name_result)
@@ -88,4 +96,6 @@ for ingredient in ingredients_result2:
 
 
 print("\nDIRECTIONS: \n")
-print(directions_bulleted)
+print(directions_bulleted1)
+print(directions_bulleted2)
+print(directions_bulleted3)
