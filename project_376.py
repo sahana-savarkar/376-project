@@ -53,11 +53,12 @@ markov_directions = markov_chain_generator(directions_list)
 recipe_start_word = random.choice(list(markov_recipe_name.keys()))
 recipe_name_result = generate_ingredient_list(markov_recipe_name, start_word=recipe_start_word, length=80)
 
+
 print('\nRECIPE NAME: ')
 print(recipe_name_result)
 
 ingredient_pattern = r'(\d+\s?\d*\/?\d*\s*(?:tablespoon|tbsp|teaspoon|tsp|cup|pounds|ounce|gram|g|liter|l)?\s*[a-zA-Z\-]+(?:\s?[a-zA-Z\-]+)*)'
-invalid_ingredient_list = ['1', '1/4', '10', '12', '18', '2', '20', '3', '4', '5', '6', '7', '8', '9', 'peeled', 'sliced', 'cored', 'softened', 'halved', 'crushed', 'shredded', 'chopped', 'grated', 'lightly', 'firm', 'thinly', 'beaten', 'drained', 'packed', 'desired', 'prepared', 'freshly', 'quartered', 'needed', 'ripe', 'frozen', 'baked', 'split', 'melted', 'salted', 'unbaked', 'warmed', 'mixed', 'ground', 'inch', 'pieces', 'tablespoon', 'tablespoons', 'cup', 'cups', 'ounce', 'cold', 'a', 'd', "with", 'dried']
+invalid_ingredient_list = ['1', '1/4', '10', '12', '18', '2', '20', '3', '4', '5', '6', '7', '8', '9', 'peeled', 'sliced', 'cored', 'softened', 'halved', 'crushed', 'shredded', 'chopped', 'grated', 'lightly', 'firm', 'thinly', 'beaten', 'drained', 'packed', 'desired', 'prepared', 'freshly', 'quartered', 'needed', 'ripe', 'frozen', 'baked', 'split', 'melted', 'salted', 'unbaked', 'warmed', 'mixed', 'ground', 'inch', 'pieces', 'tablespoon', 'tablespoons', 'cup', 'cups', 'ounce', 'ounces', 'cold', 'a', 'd', "with", 'dried', 'pinch']
 
 def ingredient_end(ingredient):
     last_word = ingredient.strip().split()[-1]
@@ -65,10 +66,13 @@ def ingredient_end(ingredient):
 
 def truncate_invalid_ingredients(ingredients):
     valid_ingredients = []
+    seen_ingredients = set()
     for ingredient in ingredients:
-        if ingredient_end(ingredient) not in invalid_ingredient_list:
+        if ingredient_end(ingredient) not in invalid_ingredient_list and ingredient not in seen_ingredients:
             valid_ingredients.append(ingredient)
+            seen_ingredients.add(ingredient)
     return valid_ingredients
+     
 
 for word in recipe_name_result.lower().split():
     matching_key = next((key for key, ingredients in markov_ingredient_starter.items() if any(word in ingredient for ingredient in ingredients)), None)
@@ -80,29 +84,44 @@ for word in recipe_name_result.lower().split():
     for item in ingredients:
         print("-", item.strip())
 
+
+awkward_endings = {"and", "for", "or", "into", "in", "a", "an", "before", "after", "with", "without", "not", "so", "if", "when", "while"}
+
 def add_bullet_points(paragraph, bullet='•'):
     sentences = re.split(r'(?<=[.!?])\s+', paragraph.strip())
-    bullet_points = [f"{bullet} {sentence.strip()}" for sentence in sentences if sentence]
+    valid_sentences = []
+    
+    for sentence in sentences:
+        sentence = sentence.strip()
+        if not sentence or len(sentence) <= 2:
+            continue
+        
+        last_word = sentence.split()[-1].strip('.!?').lower()
+        if last_word in awkward_endings:
+            continue
+        
+        valid_sentences.append(sentence)
+    
+    bullet_points = [f"{bullet} {sentence.capitalize()}" for sentence in valid_sentences]
     return '\n'.join(bullet_points)
 
+def capitalize_abbreviations(text, abbreviations=['f', 'c']):
+    pattern = r'\b(' + '|'.join(re.escape(abbr) for abbr in abbreviations) + r')\b'
+    return re.sub(pattern, lambda match: match.group(0).upper(), text)
 
 print("\nDIRECTIONS: \n")
 
-directions1_start_word = 'Mix'
-directions2_start_word = 'Bake'
-directions3_start_word = 'Serve'
+directions_start_words = ['Mix', 'Bake', 'Serve']
+directions_results = []
 
-directions_result1 = generate_ingredient_list(markov_directions, start_word=directions1_start_word, length=70)
-directions_result2 = generate_ingredient_list(markov_directions, start_word=directions2_start_word, length=70)
-directions_result3 = generate_ingredient_list(markov_directions, start_word=directions3_start_word, length=70)
+for start_word in directions_start_words:
+    if start_word not in markov_directions:
+        start_word = random.choice(list(markov_directions.keys()))
+    directions_result = generate_ingredient_list(markov_directions, start_word=start_word, length=70)
+    cleaned_directions = re.sub(r'\s+', ' ', directions_result).strip()  # Remove extra spaces
+    directions_results.append(add_bullet_points(cleaned_directions))
 
-
-directions_bulleted1 = add_bullet_points(directions_result1)
-directions_bulleted2 = add_bullet_points(directions_result2)
-directions_bulleted3 = add_bullet_points(directions_result3)
-
-print(directions_bulleted1)
-print(directions_bulleted2)
-print(directions_bulleted3)
-
+directions_results = '\n'.join(directions_results)
+directions_results = capitalize_abbreviations(directions_results)
+print(directions_results)
 
