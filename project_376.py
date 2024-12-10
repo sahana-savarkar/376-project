@@ -64,18 +64,18 @@ def ingredient_end(ingredient):
 
 def truncate_invalid_ingredients(ingredients):
     valid_ingredients = []
+    seen_ingredients = set()
     for ingredient in ingredients:
-        if ingredient_end(ingredient) not in invalid_ingredient_list:
+        if ingredient_end(ingredient) not in invalid_ingredient_list and ingredient not in seen_ingredients:
             valid_ingredients.append(ingredient)
+            seen_ingredients.add(ingredient)
     return valid_ingredients
-
-existing_ingredients = []
+     
 
 for word in recipe_name_result.lower().split():
     ingredients = generate_ingredient_list(markov_ingredient_list, start_word=word, length=20)
     ingredients = re.findall(ingredient_pattern, ingredients)
     ingredients = truncate_invalid_ingredients(ingredients)
-    existing_ingredients.append(ingredients)
     for item in ingredients:
         print("-", item.strip())
 
