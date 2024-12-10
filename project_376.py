@@ -51,8 +51,9 @@ markov_recipe_name = markov_chain_generator(recipe_name_list)
 markov_ingredient_list = markov_chain_generator(ingredient_list)
 markov_directions = markov_chain_generator(directions_list)
 
+
 recipe_start_word = random.choice(list(markov_recipe_name.keys()))
-ingredient_start_word = "butter"
+ingredient_start_word = "chocolate"
 ingredient2_start_word =  "apples"
 directions1_start_word = "Peel"
 directions2_start_word = "Mix"
