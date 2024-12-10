@@ -96,7 +96,6 @@ directions_bulleted1 = add_bullet_points(directions_result1)
 directions_bulleted2 = add_bullet_points(directions_result2)
 directions_bulleted3 = add_bullet_points(directions_result3)
 
-
 print(directions_bulleted1)
 print(directions_bulleted2)
 print(directions_bulleted3)
