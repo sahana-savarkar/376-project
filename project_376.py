@@ -4,7 +4,6 @@ from collections import defaultdict
 import random
 
 data = pd.read_csv('pie_recipes.csv')
-data = data.dropna(subset=['recipe_name', 'ingredients', 'directions'])
 
 recipe_name_list = data['recipe_name'].head(1000).tolist()
 recipe_name_list = [line.split() for line in recipe_name_list]
@@ -58,6 +57,7 @@ directions_start_word = "Peel"
 
 
 
+
 recipe_name_result = generate_ingredient_list(markov_recipe_name, start_word=recipe_start_word, length=80)
 
 ingredient_pattern = r'(\d+\s?\d*\/?\d*\s*(?:tablespoon|tbsp|teaspoon|tsp|cup|pounds|ounce|gram|g|liter|l)?\s*[a-zA-Z\-]+(?:\s?[a-zA-Z\-]+)*)'
@@ -75,7 +75,6 @@ def add_bullet_points(paragraph, bullet='•'):
     return '\n'.join(bullet_points)
 
 directions_bulleted = add_bullet_points(directions_result)
-
 
 print('\nRECIPE NAME: ')
 print(recipe_name_result)
