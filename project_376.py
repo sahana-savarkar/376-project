@@ -70,6 +70,16 @@ def capitalize_abbreviations(text, abbreviations=['f', 'c']):
     pattern = r'\b(' + '|'.join(re.escape(abbr) for abbr in abbreviations) + r')\b'
     return re.sub(pattern, lambda match: match.group(0).upper(), text)
 
+def most_frequent(mylist):
+    big_list = []
+    for l in mylist:
+        for t in l:
+            big_list.append(t)
+
+    most_common = max(set(big_list), key=big_list.count)
+    count = big_list.count(most_common)
+    return most_common, count
+
 
 data = pd.read_csv('pie_recipes.csv')
 data = data.dropna(subset=['recipe_name', 'ingredients', 'directions'])
@@ -78,27 +88,18 @@ recipe_name_before = data['recipe_name'].head(1000).tolist()
 recipe_name_list = [line.split() for line in recipe_name_before]
 
 ingredients_before = data['ingredients'].head(1000).tolist()
-ingredient_list = [line.split(" ") for line in ingredients_before]
+ingredient_list = [line.split() for line in ingredients_before]
 
-def most_frequent(mylist: list):
-    most_common = max(set(mylist), key=mylist.count)
-    count = mylist.count(most_common)
-    return most_common, count
 
+directions_list = data['directions'].head(1000).tolist()
+directions_list = [line.split(" ") for line in directions_list]
 
 
 
-big_recipe_list = []
+print(most_frequent(recipe_name_list))
+print(most_frequent(ingredient_list))
+print(most_frequent(directions_list))
 
-#def tokenizer
-
-
-for line in recipe_name_list:
-    for token in line:
-        big_recipe_list.append(token.strip())
-
-#print(most_frequent(big_recipe_list))
-print(len(big_recipe_list))
 #recipe_most_common = most_frequent(big_recipe_list)
 #prob_most_common = round((recipe_most_common[1] / len(big_recipe_list)), 4)
 #print("probability of pie: " + str(prob_most_common))
@@ -108,13 +109,8 @@ print(len(big_recipe_list))
 # ingredient_tokens = ingredient_string.split(",")
 # recipe_tokens = recipe_string.split(",")
 
-big_ing_list = []
 
-for line in ingredient_list:
-    for token in line:
-        big_ing_list.append(token.strip())
 
-print(len(big_ing_list))
 
 # print("Recipes:",most_frequent(recipe_tokens))
 # print("Ingredients:",most_frequent(ingredient_tokens))
@@ -124,8 +120,6 @@ print(len(big_ing_list))
 #print(most_frequent(ingredient_list))
 
 
-directions_list = data['directions'].head(1000).tolist()
-directions_list = [line.split(" ") for line in directions_list]
 
 markov_recipe_name = markov_chain_generator(recipe_name_list)
 markov_ingredient_list = markov_chain_generator(ingredient_list)
