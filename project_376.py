@@ -28,6 +28,7 @@ def markov_chain_generator(data_list):
             transitions[next_word] /= total_transitions
     return markov_chain
 
+
 def generate_ingredient_list(chain, start_word, length):
     if start_word not in chain:
         start_word = random.choice(list(chain.keys()))
@@ -56,7 +57,13 @@ print('\nRECIPE NAME: ')
 print(recipe_name_result)
 
 ingredient_pattern = r'(\d+\s?\d*\/?\d*\s*(?:tablespoon|tbsp|teaspoon|tsp|cup|pounds|ounce|gram|g|liter|l)?\s*[a-zA-Z\-]+(?:\s?[a-zA-Z\-]+)*)'
-invalid_ingredient_list = ['1', '1/4', '10', '12', '18', '2', '20', '3', '4', '5', '6', '7', '8', '9', 'peeled', 'sliced', 'cored', 'softened', 'halved', 'crushed', 'shredded', 'chopped', 'grated', 'lightly', 'firm', 'thinly', 'beaten', 'drained', 'packed', 'desired', 'prepared', 'freshly', 'quartered', 'needed', 'ripe', 'frozen', 'baked', 'split', 'melted', 'salted', 'unbaked', 'warmed', 'mixed', 'ground', 'inch', 'pieces', 'tablespoon', 'tablespoons', 'cup', 'cups', 'ounce', 'ounces', 'cold', 'a', 'd', "with", 'dried', 'pinch']
+invalid_ingredient_list = ['1', '1/4', '10', '12', '18', '2', '20', '3', '4', '5', '6', '7', '8', '9',
+                            'peeled', 'sliced', 'cored', 'softened', 'halved', 'crushed', 'shredded',
+                            'chopped', 'grated', 'lightly', 'firm', 'thinly', 'beaten', 'drained',
+                            'packed', 'desired', 'prepared', 'freshly', 'quartered', 'needed', 'ripe',
+                            'frozen', 'baked', 'split', 'melted', 'salted', 'unbaked', 'warmed', 'mixed',
+                            'ground', 'inch', 'pieces', 'tablespoon', 'tablespoons', 'cup', 'cups', 'ounce',
+                            'ounces', 'cold', 'a', 'd', "with", 'dried', 'pinch', 'fresh']
 
 def ingredient_end(ingredient):
     last_word = ingredient.strip().split()[-1]
@@ -113,7 +120,7 @@ for start_word in directions_start_words:
     if start_word not in markov_directions:
         start_word = random.choice(list(markov_directions.keys()))
     directions_result = generate_ingredient_list(markov_directions, start_word=start_word, length=70)
-    cleaned_directions = re.sub(r'\s+', ' ', directions_result).strip()  # Remove extra spaces
+    cleaned_directions = re.sub(r'\s+', ' ', directions_result).strip()
     directions_results.append(add_bullet_points(cleaned_directions))
 
 directions_results = '\n'.join(directions_results)
