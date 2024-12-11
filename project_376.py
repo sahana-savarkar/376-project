@@ -92,7 +92,8 @@ for word in recipe_name_result.lower().split():
         print("-", item.strip())
 
 
-awkward_endings = {"and", "for", "or", "into", "in", "a", "an", "before", "after", "with", "without", "not", "so", "if", "when", "while"}
+awkward_endings = ["and", "for", "or", "into", "in", "a", "an", "before", "after", "with",
+                    "without", "not", "so", "if", "when", "while"]
 
 def add_bullet_points(paragraph, bullet='•'):
     sentences = re.split(r'(?<=[.!?])\s+', paragraph.strip())
