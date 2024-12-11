@@ -46,6 +46,7 @@ def truncate_invalid_ingredients(ingredients):
             seen_ingredients.append(last_word_of_ingredient)
     return valid_ingredients
 
+
 def add_bullet_points(paragraph, bullet='•'):
     sentences = re.split(r'(?<=[.!?])\s+', paragraph.strip())
     valid_sentences = []
