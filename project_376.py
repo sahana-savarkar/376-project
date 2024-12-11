@@ -16,6 +16,8 @@ ingredient_starter = [line.split(",") for line in ingredients_before]
 directions_list = data['directions'].head(1000).tolist()
 directions_list = [line.split(" ") for line in directions_list]
 
+print(directions_list)
+
 def markov_chain_generator(data_list):
     markov_chain = defaultdict(lambda: defaultdict(int))
     for tokens in data_list:
@@ -125,3 +127,10 @@ directions_results = '\n'.join(directions_results)
 directions_results = capitalize_abbreviations(directions_results)
 print(directions_results)
 
+
+print("\n-------test for slides--------\n")
+words = ["The fox jumps over the dog.", "The cat runs around the dog"]
+words = [line.split() for line in words]
+print(words)
+slides_markov = markov_chain_generator(words)
+print(slides_markov)
