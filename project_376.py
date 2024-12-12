@@ -70,6 +70,18 @@ def capitalize_abbreviations(text, abbreviations=['f', 'c']):
     pattern = r'\b(' + '|'.join(re.escape(abbr) for abbr in abbreviations) + r')\b'
     return re.sub(pattern, lambda match: match.group(0).upper(), text)
 
+def most_frequent(mylist):
+    big_list = []
+    for l in mylist:
+        for t in l:
+            big_list.append(t)
+    
+    print("total words in list:", len(big_list))
+
+    most_common = max(set(big_list), key=big_list.count)
+    count = big_list.count(most_common)
+    return most_common, count
+
 
 data = pd.read_csv('pie_recipes.csv')
 data = data.dropna(subset=['recipe_name', 'ingredients', 'directions'])
@@ -78,27 +90,18 @@ recipe_name_before = data['recipe_name'].head(1000).tolist()
 recipe_name_list = [line.split() for line in recipe_name_before]
 
 ingredients_before = data['ingredients'].head(1000).tolist()
-ingredient_list = [line.split(" ") for line in ingredients_before]
+ingredient_list = [line.split() for line in ingredients_before]
 
-def most_frequent(mylist: list):
-    most_common = max(set(mylist), key=mylist.count)
-    count = mylist.count(most_common)
-    return most_common, count
 
+directions_list = data['directions'].head(1000).tolist()
+directions_list = [line.split(" ") for line in directions_list]
 
 
 
-big_recipe_list = []
+print(most_frequent(recipe_name_list))
+print(most_frequent(ingredient_list))
+print(most_frequent(directions_list))
 
-#def tokenizer
-
-
-for line in recipe_name_list:
-    for token in line:
-        big_recipe_list.append(token.strip())
-
-#print(most_frequent(big_recipe_list))
-print(len(big_recipe_list))
 #recipe_most_common = most_frequent(big_recipe_list)
 #prob_most_common = round((recipe_most_common[1] / len(big_recipe_list)), 4)
 #print("probability of pie: " + str(prob_most_common))
@@ -108,13 +111,8 @@ print(len(big_recipe_list))
 # ingredient_tokens = ingredient_string.split(",")
 # recipe_tokens = recipe_string.split(",")
 
-big_ing_list = []
 
-for line in ingredient_list:
-    for token in line:
-        big_ing_list.append(token.strip())
 
-print(len(big_ing_list))
 
 # print("Recipes:",most_frequent(recipe_tokens))
 # print("Ingredients:",most_frequent(ingredient_tokens))
@@ -124,12 +122,14 @@ print(len(big_ing_list))
 #print(most_frequent(ingredient_list))
 
 
-directions_list = data['directions'].head(1000).tolist()
-directions_list = [line.split(" ") for line in directions_list]
 
 markov_recipe_name = markov_chain_generator(recipe_name_list)
 markov_ingredient_list = markov_chain_generator(ingredient_list)
 markov_directions = markov_chain_generator(directions_list)
+
+print(f"{len(markov_recipe_name)} unique words in recipe name markov chain")
+print(f"{len(markov_ingredient_list)} unique words in ingredient list markov chain")
+print(f"{len(markov_directions)} unique words in directions markov chain")
 
 
 recipe_tokens = len(markov_recipe_name)
@@ -137,12 +137,13 @@ ingredient_tokens = len(markov_ingredient_list)
 direction_tokens = len(markov_directions)
 
 #pie_occurrence = 
-
+$
 print('\nRECIPE NAME: \n')
 recipe_name_result = generate_text(markov_recipe_name, "", length=80)
 print(recipe_name_result, "\n" + "-"*len(recipe_name_result))
 
 ingredient_pattern = r'(\d+\s?\d*\/?\d*\s*(?:tablespoon|tbsp|teaspoon|tsp|cup|pounds|ounce|gram|g|liter|l)?\s*[a-zA-Z\-]+(?:\s?[a-zA-Z\-]+)*)'
+
 invalid_ingredient_list = ['1', '1/4', '10', '12', '18', '2', '20', '3', '4', '5', '6', '7', '8', '9',
                             'peeled', 'sliced', 'cored', 'softened', 'halved', 'crushed', 'shredded',
                             'chopped', 'grated', 'lightly', 'firm', 'thinly', 'beaten', 'drained',
@@ -168,7 +169,7 @@ directions_start_words = ['Mix', 'Bake', 'Serve']
 directions_results = []
 
 for start_word in directions_start_words:
-    directions_result = generate_text(markov_directions, start_word, length=70)
+    directions_result = generate_text(markov_directions, start_word, length=30)
     cleaned_directions = re.sub(r'\s+', ' ', directions_result).strip()
     directions_results.append(add_bullet_points(cleaned_directions))
 
