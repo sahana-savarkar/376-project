@@ -137,7 +137,7 @@ ingredient_tokens = len(markov_ingredient_list)
 direction_tokens = len(markov_directions)
 
 #pie_occurrence = 
-$
+
 print('\nRECIPE NAME: \n')
 recipe_name_result = generate_text(markov_recipe_name, "", length=80)
 print(recipe_name_result, "\n" + "-"*len(recipe_name_result))
