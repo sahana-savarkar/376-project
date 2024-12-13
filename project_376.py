@@ -2,6 +2,7 @@ import re
 import pandas as pd
 from collections import defaultdict
 import random
+import time
 
 def markov_chain_generator(data_list):
     markov_chain = defaultdict(lambda: defaultdict(int))
@@ -82,6 +83,14 @@ def most_frequent(mylist):
     count = big_list.count(most_common)
     return most_common, count
 
+def deterministic_counter(markov_chain):
+    ct = 0
+    for current_word, transitions in markov_chain.items():
+        for next_word in transitions:
+            if transitions[next_word] == 1:
+                ct += 1
+    return ct  
+
 
 data = pd.read_csv('pie_recipes.csv')
 data = data.dropna(subset=['recipe_name', 'ingredients', 'directions'])
@@ -90,53 +99,44 @@ recipe_name_before = data['recipe_name'].head(1000).tolist()
 recipe_name_list = [line.split() for line in recipe_name_before]
 
 ingredients_before = data['ingredients'].head(1000).tolist()
-ingredient_list = [line.split() for line in ingredients_before]
+ingredient_list = [line.replace(",","").split() for line in ingredients_before]
 
 
 directions_list = data['directions'].head(1000).tolist()
 directions_list = [line.split(" ") for line in directions_list]
 
 
-
 print(most_frequent(recipe_name_list))
 print(most_frequent(ingredient_list))
 print(most_frequent(directions_list))
 
-#recipe_most_common = most_frequent(big_recipe_list)
-#prob_most_common = round((recipe_most_common[1] / len(big_recipe_list)), 4)
-#print("probability of pie: " + str(prob_most_common))
-
-# ingredient_string = ' '.join(ingredients_before).strip()
-# recipe_string = ' '.join(recipe_name_before)
-# ingredient_tokens = ingredient_string.split(",")
-# recipe_tokens = recipe_string.split(",")
-
-
-
-
-# print("Recipes:",most_frequent(recipe_tokens))
-# print("Ingredients:",most_frequent(ingredient_tokens))
-
-
-#print(most_frequent(recipe_name_list))
-#print(most_frequent(ingredient_list))
-
-
+start_time = time.time()
 
 markov_recipe_name = markov_chain_generator(recipe_name_list)
 markov_ingredient_list = markov_chain_generator(ingredient_list)
 markov_directions = markov_chain_generator(directions_list)
 
-print(f"{len(markov_recipe_name)} unique words in recipe name markov chain")
-print(f"{len(markov_ingredient_list)} unique words in ingredient list markov chain")
-print(f"{len(markov_directions)} unique words in directions markov chain")
+end_time = time.time()
+
+print(f"Markov Chain Runtime: {end_time - start_time} seconds")
+
+print("# of fully deterministic words in recipe name markov chain:", deterministic_counter(markov_recipe_name))
+print(f"{len(markov_recipe_name)} unique words in recipe name markov chain\n")
+
+print("# of fully deterministic words in ingredient list markov chain:", deterministic_counter(markov_ingredient_list))
+print(f"{len(markov_ingredient_list)} unique words in ingredient list markov chain\n")
+
+print("# of fully deterministic words in direction list markov chain:", deterministic_counter(markov_directions))
+print(f"{len(markov_directions)} unique words in directions markov chain\n")
+
 
 
 recipe_tokens = len(markov_recipe_name)
 ingredient_tokens = len(markov_ingredient_list)
 direction_tokens = len(markov_directions)
 
-#pie_occurrence = 
+text_gen_time = time.time()
+
 
 print('\nRECIPE NAME: \n')
 recipe_name_result = generate_text(markov_recipe_name, "", length=80)
@@ -176,4 +176,7 @@ for start_word in directions_start_words:
 directions_results = '\n'.join(directions_results)
 directions_results = capitalize_abbreviations(directions_results)
 print(directions_results)
+
+text_gen_end = time.time()
+print(f"Text Generation Runtime: {text_gen_end - text_gen_time} seconds")
 
